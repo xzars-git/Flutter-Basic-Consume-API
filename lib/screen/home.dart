@@ -1,6 +1,8 @@
 import 'package:exam/controller/auth_controller.dart';
+import 'package:exam/screen/listProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:exam/assets/image.dart';
+import 'package:get/get.dart';
 
 class Home extends StatelessWidget {
   String email;
@@ -56,6 +58,32 @@ class Home extends StatelessWidget {
           ),
           SizedBox(
             height: 205,
+          ),
+          GestureDetector(
+            onTap: () {
+              Get.to(() => listProfile());
+            },
+            child: Container(
+              width: w * 0.5,
+              height: h * 0.08,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  image: DecorationImage(
+                      image: AssetImage(loginButton), fit: BoxFit.cover)),
+              child: Center(
+                child: Text(
+                  "List Profile 'Reqres.in'",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(
+            height: 20,
           ),
           GestureDetector(
             onTap: () {

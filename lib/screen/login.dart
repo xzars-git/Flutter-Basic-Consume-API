@@ -64,6 +64,7 @@ class _LoginState extends State<Login> {
                                     color: Colors.grey.withOpacity(0.2))
                               ]),
                           child: TextField(
+                            keyboardType: TextInputType.emailAddress,
                             controller: emailController,
                             decoration: InputDecoration(
                                 hintText: "Your email",
@@ -98,6 +99,7 @@ class _LoginState extends State<Login> {
                                     color: Colors.grey.withOpacity(0.2))
                               ]),
                           child: TextField(
+                            keyboardType: TextInputType.visiblePassword,
                             controller: passwordController,
                             obscureText: true,
                             decoration: InputDecoration(

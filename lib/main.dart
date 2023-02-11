@@ -20,6 +20,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-        debugShowCheckedModeBanner: false, home: splashScreen());
+        theme: ThemeData(primaryColor: Colors.pinkAccent),
+        debugShowCheckedModeBanner: false,
+        home: splashScreen());
   }
 }
