@@ -162,7 +162,7 @@ class _LoginState extends State<Login> {
                               text: " Create ",
                               style: TextStyle(
                                   color: Colors.black,
-                                  fontSize: 20,
+                                  fontSize: 25,
                                   fontWeight: FontWeight.w500),
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => Get.to(() => SignUp()))

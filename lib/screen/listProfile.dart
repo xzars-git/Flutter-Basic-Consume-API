@@ -8,6 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import 'createUser.dart';
+
 class listProfile extends StatefulWidget {
   @override
   State<listProfile> createState() => _listProfileState();
@@ -16,10 +18,11 @@ class listProfile extends StatefulWidget {
 class _listProfileState extends State<listProfile> {
   var apiUrl = "https://reqres.in/api/users?per_page=15";
   List? data;
+  List? foundData;
 
   TextEditingController _searchQueryController = TextEditingController();
   bool _isSearching = false;
-  String searchQuery = "Search query";
+  String searchQuery = "";
 
   @override
   void initState() {
@@ -34,10 +37,10 @@ class _listProfileState extends State<listProfile> {
   Future<String?> getJsonData(BuildContext context) async {
     var response = await http
         .get(Uri.parse(apiUrl), headers: {"Accept": "application/json"});
-    print(response.body);
     setState(() {
       var convertDataToJson = jsonDecode(response.body);
       data = convertDataToJson['data'];
+      foundData = data;
     });
   }
 
@@ -57,7 +60,7 @@ class _listProfileState extends State<listProfile> {
           onRefresh: _getRefreshData,
           child: Container(
             child: ListView.builder(
-                itemCount: data == null ? 0 : data!.length,
+                itemCount: foundData == null ? 0 : foundData!.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                       margin: EdgeInsets.all(5.0),
@@ -66,11 +69,11 @@ class _listProfileState extends State<listProfile> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              var data1 = data![index]['first_name'];
-                              var data2 = data![index]['last_name'];
-                              var data3 = data![index]['email'];
-                              var data4 = data![index]['avatar'];
-                              var data5 = data![index]['id'];
+                              var data1 = foundData![index]['first_name'];
+                              var data2 = foundData![index]['last_name'];
+                              var data3 = foundData![index]['email'];
+                              var data4 = foundData![index]['avatar'];
+                              var data5 = foundData![index]['id'];
                               Get.to(() => detailProfile(
                                   value: [data1, data2, data3, data4, data5]));
                             },
@@ -82,13 +85,14 @@ class _listProfileState extends State<listProfile> {
                                   ListTile(
                                     leading: CircleAvatar(
                                       radius: 30,
-                                      backgroundImage:
-                                          NetworkImage(data![index]['avatar']),
+                                      backgroundImage: NetworkImage(
+                                          foundData![index]['avatar']),
                                     ),
-                                    title: Text(data![index]['first_name'] +
+                                    title: Text(foundData![index]
+                                            ['first_name'] +
                                         " " +
-                                        data![index]['last_name']),
-                                    subtitle: Text(data![index]['email']),
+                                        foundData![index]['last_name']),
+                                    subtitle: Text(foundData![index]['email']),
                                   ),
                                   SizedBox(
                                     height: 3,
@@ -108,7 +112,11 @@ class _listProfileState extends State<listProfile> {
                 }),
           )),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          Get.to(() => createUser(
+                data: [],
+              ));
+        },
         child: Icon(Icons.add),
         backgroundColor: Color(0xFFfc938b),
       ),
@@ -125,7 +133,7 @@ class _listProfileState extends State<listProfile> {
         hintStyle: TextStyle(color: Colors.white70),
       ),
       style: TextStyle(color: Colors.white, fontSize: 16.0),
-      onChanged: (query) => updateSearchQuery(query),
+      onChanged: (Value) => updateSearchQuery(Value),
     );
   }
 
@@ -164,8 +172,17 @@ class _listProfileState extends State<listProfile> {
   }
 
   void updateSearchQuery(String newQuery) {
+    List results = [];
+    if (newQuery.isEmpty) {
+      results = data!;
+    } else {
+      results = data!
+          .where((user) =>
+              user["first_name"].toLowerCase().contains(newQuery.toLowerCase()))
+          .toList();
+    }
     setState(() {
-      searchQuery = newQuery;
+      foundData = results;
     });
   }
 
